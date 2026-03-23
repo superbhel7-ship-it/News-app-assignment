@@ -180,12 +180,12 @@ class NewsRemoteDataSource {
   }
 
   Future<List<ArticleModel>> _newsApiSearch(String query, int page) async {
+    // Search with relevancy sort and wider time range for blog/article results
     final response = await _dio.get(
       '$_newsApiBase/everything',
       queryParameters: {
         'q': query,
-        'from': _fromDate(6),
-        'sortBy': 'publishedAt',
+        'sortBy': 'relevancy',
         'language': 'en',
         'pageSize': 20,
         'page': page,
@@ -193,20 +193,8 @@ class NewsRemoteDataSource {
       },
     );
     final articles = _parseNewsApi(response);
-    if (articles.length < 5 && page == 1) {
-      final fallback = await _dio.get(
-        '$_newsApiBase/everything',
-        queryParameters: {
-          'q': query,
-          'from': _fromDate(24),
-          'sortBy': 'publishedAt',
-          'language': 'en',
-          'pageSize': 20,
-          'page': page,
-          'apiKey': _apiKey,
-        },
-      );
-      return _parseNewsApi(fallback);
+    if (articles.isEmpty && page == 1) {
+      throw ServerException('No search results from NewsAPI');
     }
     return articles;
   }
