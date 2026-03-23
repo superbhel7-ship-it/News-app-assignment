@@ -17,8 +17,8 @@ class _Channel {
     required this.color,
   });
 
-  String get embedUrl =>
-      'https://www.youtube.com/embed/live_stream?channel=$channelId&autoplay=1&mute=0&playsinline=1';
+  /// Direct YouTube live URL - loads channel's live stream page
+  String get liveUrl => 'https://m.youtube.com/channel/$channelId/live';
 }
 
 const _channels = [
@@ -133,22 +133,13 @@ class _LivePlayerScreenState extends State<_LivePlayerScreen> {
   }
 
   void _initMobileWebView() {
-    final embedHtml = '''
-<!DOCTYPE html><html><head>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<style>*{margin:0;padding:0}body{background:#000;overflow:hidden}
-iframe{width:100vw;height:100vh;border:none}</style>
-</head><body>
-<iframe src="${widget.channel.embedUrl}"
-  allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-</body></html>''';
-
     _mobileController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setUserAgent('Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36')
       ..setNavigationDelegate(NavigationDelegate(
         onPageFinished: (_) { if (mounted) setState(() => _isLoading = false); },
       ))
-      ..loadHtmlString(embedHtml);
+      ..loadRequest(Uri.parse(widget.channel.liveUrl));
   }
 
   @override
@@ -175,7 +166,7 @@ iframe{width:100vw;height:100vh;border:none}</style>
       tagName: 'iframe',
       onElementCreated: (element) {
         final iframe = element as dynamic;
-        iframe.src = widget.channel.embedUrl;
+        iframe.src = widget.channel.liveUrl;
         iframe.style.border = 'none';
         iframe.style.width = '100%';
         iframe.style.height = '100%';
