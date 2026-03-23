@@ -2,6 +2,10 @@
 
 A Flutter 3+ news application built for the Junior Developer assignment. The app provides authentication, a category-based news feed, search, article detail, favorites, and offline persistence.
 
+## Download
+
+[Download APK](https://github.com/superbhel7-ship-it/News-app-assignment/releases/download/v1.0.0/app-release.apk)
+
 ## Tech Stack
 
 - Flutter 3.38+
@@ -136,11 +140,3 @@ flutter run
 - add widget tests with mocked providers
 - add cached feed responses for offline reading
 - unify auth persistence so tests and startup behavior are easier to control
-
-
- 
-
- Dhnayawaadd ... loghing emojiii hoohohohohohohohohho
-  
-
-  if u like it dont share it  jsut say Yo hoho hooo
