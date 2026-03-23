@@ -12,7 +12,17 @@ class NewsRemoteDataSource {
 
   // ─── NewsAPI config ───
   static const String _newsApiBase = 'https://newsapi.org/v2';
-  static const String _apiKey = 'f862b816d51445708056a40e37507da0';
+  static const List<String> _apiKeys = [
+    'f862b816d51445708056a40e37507da0',
+    '04cdccd6df8443ac917c90a00da9ee25',
+  ];
+  static int _currentKeyIndex = 0;
+  static String get _apiKey => _apiKeys[_currentKeyIndex];
+
+  /// Switch to next API key when rate limited.
+  static void _rotateKey() {
+    _currentKeyIndex = (_currentKeyIndex + 1) % _apiKeys.length;
+  }
 
   // ─── Google News RSS config (free, unlimited) ───
   static const String _rssBase = 'https://news.google.com/rss';
@@ -207,8 +217,12 @@ class NewsRemoteDataSource {
 
     final data = response.data as Map<String, dynamic>;
 
-    // Check for rate limit or error
+    // Check for rate limit or error — rotate API key on limit
     if (data['status'] == 'error') {
+      final code = data['code'] as String? ?? '';
+      if (code == 'rateLimited') {
+        _rotateKey();
+      }
       throw ServerException(data['message'] ?? 'NewsAPI error');
     }
 
