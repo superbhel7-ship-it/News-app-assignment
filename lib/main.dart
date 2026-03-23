@@ -53,7 +53,6 @@ class ArticsApp extends ConsumerWidget {
   Widget _buildHome(AuthState authState) {
     switch (authState.status) {
       case AuthStatus.initial:
-      case AuthStatus.loading:
         return const Scaffold(
           body: Center(
             child: CircularProgressIndicator(color: AppTheme.primary),
@@ -61,8 +60,10 @@ class ArticsApp extends ConsumerWidget {
         );
       case AuthStatus.authenticated:
         return const MainShell();
+      case AuthStatus.loading:
       case AuthStatus.unauthenticated:
-      case AuthStatus.error: // kept for safety
+      case AuthStatus.error:
+        // Keep LoginScreen alive during loading so form state persists
         return const LoginScreen();
     }
   }
