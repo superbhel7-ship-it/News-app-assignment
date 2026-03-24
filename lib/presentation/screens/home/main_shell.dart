@@ -50,7 +50,7 @@ class _MainShellState extends ConsumerState<MainShell> {
       ),
       extendBody: true,
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
         child: Container(
           height: 56,
           decoration: BoxDecoration(
@@ -136,11 +136,10 @@ class _TabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 72,
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -148,18 +147,20 @@ class _TabItem extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               child: Icon(
                 isSelected ? activeIcon : icon,
-                size: 24,
+                size: 22,
                 color: isSelected ? AppTheme.primary : c.textSecondary,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
               label,
               style: TextStyle(
                 color: isSelected ? AppTheme.primary : c.textSecondary,
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ],
         ),
